@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const langEnBtn = document.getElementById('langEn');
 
     let creaturesData = [];
-    let currentLanguage = 'es';
+    let currentLanguage = localStorage.getItem('preferredLanguage') || 'es';
 
     // Cargar datos del JSON
     fetch('creatures.json')
@@ -57,12 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
             <h2 id="modalTitle">${creature.name}</h2>
             <div class="modal-body">
                 <div class="modal-left">
-                    <p><strong data-i18n="health">Salud:</strong> <span id="modalHealth">${creature.health}</span></p>
-                    <p><strong data-i18n="experience">Experiencia:</strong> <span id="modalExp">${creature.experience}</span></p>
-                    <p><strong data-i18n="race">Raza:</strong> <span id="modalRace">${creature.race}</span></p>
-                    <p><strong data-i18n="speed">Velocidad:</strong> <span id="modalSpeed">${creature.speed_like}</span></p>
-                    <p><strong data-i18n="summonable">Invocable:</strong> <span id="modalSummonable">${creature.summonable}</span></p>
-                    <p><strong data-i18n="convinceable">Convenceable:</strong> <span id="modalConvinceable">${creature.convinceable}</span></p>
+                    <p><strong data-i18n="modalHealth">Salud:</strong> <span id="modalHealth">${creature.health}</span></p>
+                    <p><strong data-i18n="modalExp">Experiencia:</strong> <span id="modalExp">${creature.experience}</span></p>
+                    <p><strong data-i18n="modalRace">Raza:</strong> <span id="modalRace">${creature.race}</span></p>
+                    <p><strong data-i18n="modalSpeed">Velocidad:</strong> <span id="modalSpeed">${creature.speed_like}</span></p>
+                    <p><strong data-i18n="modalSummonable">Invocable:</strong> <span id="modalSummonable">${creature.summonable}</span></p>
+                    <p><strong data-i18n="modalConvinceable">Convenceable:</strong> <span id="modalConvinceable">${creature.convinceable}</span></p>
                 </div>
                 <div class="modal-right">
                     <h3 data-i18n="immunities">Inmunidades:</h3>
@@ -112,6 +112,9 @@ document.addEventListener('DOMContentLoaded', function() {
         setupList('modalImmunities', creature.immunities, 'noImmunities');
         setupList('modalVoices', creature.voices, 'noVoices');
 
+        // Aplicar traducciones al modal
+        translateModalContent();
+
         // Mostrar modal
         modal.style.display = 'block';
 
@@ -126,8 +129,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return creatureName.toLowerCase().replace(/\s+/g, '_') + '.gif';
     }
 
-    function getItemImageName(itemUrl) {
-        return decodeURIComponent(itemUrl.split('/').pop());
+    function getItemImageName(itemId) {
+        return itemId + '.gif';
     }
 
     function setupList(elementId, items, noItemsTranslationKey) {
@@ -143,6 +146,37 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             listElement.innerHTML = `<li>${translations[currentLanguage][noItemsTranslationKey]}</li>`;
         }
+    }
+
+    function translateModalContent() {
+        // Traducir etiquetas de los campos
+        const fields = ['Health', 'Exp', 'Race', 'Speed', 'Summonable', 'Convinceable'];
+        fields.forEach(field => {
+            const element = document.getElementById(`modal${field}`);
+            if (element) {
+                const label = element.previousElementSibling;
+                if (label && label.tagName === 'STRONG' && translations[currentLanguage][`modal${field}`]) {
+                    label.textContent = translations[currentLanguage][`modal${field}`] + ":";
+                }
+            }
+        });
+
+        // Traducir secciones
+        const sections = ['immunities', 'voices', 'droppedItems'];
+        sections.forEach(section => {
+            const element = document.querySelector(`[data-i18n="${section}"]`);
+            if (element && translations[currentLanguage][section]) {
+                element.textContent = translations[currentLanguage][section];
+            }
+        });
+
+        // Traducir "no items" si existe
+        const noItemsElements = document.querySelectorAll('.modal-items p');
+        noItemsElements.forEach(element => {
+            if (translations[currentLanguage]['noItems']) {
+                element.textContent = translations[currentLanguage]['noItems'];
+            }
+        });
     }
 
     // Funcionalidad de búsqueda y filtrado
@@ -202,12 +236,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function setLanguage(lang) {
         currentLanguage = lang;
-        document.dispatchEvent(new CustomEvent('languageChanged', { detail: lang }));
+        document.documentElement.lang = lang;
+        localStorage.setItem('preferredLanguage', lang);
         applyTranslations();
         filterCreatures();
     }
 
     function applyTranslations() {
+        // Elementos estáticos
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.getAttribute('data-i18n');
             if (translations[currentLanguage][key]) {
@@ -215,6 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        // Placeholders
         document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
             const key = element.getAttribute('data-i18n-placeholder');
             if (translations[currentLanguage][key]) {
@@ -232,6 +269,11 @@ document.addEventListener('DOMContentLoaded', function() {
         currentLanguage = e.detail;
         updateLanguageButtons();
         applyTranslations();
+
+        // Si el modal está abierto, retraducir su contenido
+        if (modal.style.display === 'block') {
+            translateModalContent();
+        }
     });
 
     // Inicializar
