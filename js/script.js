@@ -22,75 +22,66 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error loading creatures data:', error));
 
-    // Mostrar criaturas en la cuadrícula
+    // Mostrar criaturas en lista
     function displayCreatures(creatures) {
         creaturesContainer.innerHTML = '';
 
         creatures.forEach(creature => {
-            const creatureCard = document.createElement('div');
-            creatureCard.className = 'creature-card';
+            const creatureRow = document.createElement('div');
+            creatureRow.className = 'creature-row';
 
             const creatureImageName = getCreatureImageName(creature.name);
             const creatureImagePath = `images/creatures/${creatureImageName}`;
 
-            creatureCard.innerHTML = `
-                <img src="${creatureImagePath}" alt="${creature.name}" class="creature-image" 
-                     onerror="this.src='images/default_creature.gif';this.onerror=null;">
-                <h3 class="creature-name">${creature.name}</h3>
-                <div class="creature-stats">
-                    <span class="creature-stat">❤️ ${creature.health}</span>
-                    <span class="creature-stat">⭐ ${creature.experience}</span>
-                </div>
-                <p class="creature-race">${translations[currentLanguage]['race']} ${creature.race}</p>
-            `;
-
-            creatureCard.addEventListener('click', () => openModal(creature));
-            creaturesContainer.appendChild(creatureCard);
-        });
-    }
-
-    // Abrir modal con detalles de la criatura
-    function openModal(creature) {
-        const modalContent = document.querySelector('.modal-content');
-        modalContent.innerHTML = `
-            <span class="close">&times;</span>
-            <h2 id="modalTitle">${creature.name}</h2>
-            <div class="modal-body">
-                <div class="modal-left">
-                    <p><strong data-i18n="modalHealth">Salud:</strong> <span id="modalHealth">${creature.health}</span></p>
-                    <p><strong data-i18n="modalExp">Experiencia:</strong> <span id="modalExp">${creature.experience}</span></p>
-                    <p><strong data-i18n="modalRace">Raza:</strong> <span id="modalRace">${creature.race}</span></p>
-                    <p><strong data-i18n="modalSpeed">Velocidad:</strong> <span id="modalSpeed">${creature.speed_like}</span></p>
-                    <p><strong data-i18n="modalSummonable">Invocable:</strong> <span id="modalSummonable">${creature.summonable}</span></p>
-                    <p><strong data-i18n="modalConvinceable">Convenceable:</strong> <span id="modalConvinceable">${creature.convinceable}</span></p>
-                </div>
-                <div class="modal-right">
-                    <h3 data-i18n="immunities">Inmunidades:</h3>
-                    <ul id="modalImmunities"></ul>
-                    <h3 data-i18n="voices">Frases:</h3>
-                    <ul id="modalVoices"></ul>
-                </div>
+            creatureRow.innerHTML = `
+            <div class="creature-image-container">
+                <img src="${creatureImagePath}" alt="${creature.name}" class="creature-image"
+                     onerror="this.src='images/creatures/default_item.png';this.onerror=null;">
             </div>
-            <div class="modal-items">
-                <h3 data-i18n="droppedItems">Items que suelta:</h3>
-                <div class="items-grid" id="modalItems"></div>
+            <div class="creature-info">
+                <h3 class="creature-name">${creature.name}</h3>
+                <div class="creature-meta">
+                    <span class="creature-race">${creature.race}</span>
+                    <div class="creature-stats">
+                        <span class="creature-stat">❤️ ${creature.health}</span>
+                        <span class="creature-stat">⭐ ${creature.experience}</span>
+                    </div>
+                </div>
             </div>
         `;
 
-        // Agregar imagen de la criatura
-        const creatureImageName = getCreatureImageName(creature.name);
-        const creatureImage = document.createElement('img');
-        creatureImage.src = `images/creatures/${creatureImageName}`;
-        creatureImage.alt = creature.name;
-        creatureImage.className = 'modal-creature-image';
-        creatureImage.onerror = function() {
-            this.src = 'images/default_creature.gif';
-            this.onerror = null;
-        };
-        modalContent.insertBefore(creatureImage, document.getElementById('modalTitle'));
+            creatureRow.addEventListener('click', () => openModal(creature));
+            creaturesContainer.appendChild(creatureRow);
+        });
+    }
 
-        // Mostrar items
+
+    // Abrir modal con detalles de la criatura
+    function openModal(creature) {
+        document.getElementById('modalTitle').textContent = creature.name;
+        document.getElementById('modalHealth').textContent = creature.health;
+        document.getElementById('modalExp').textContent = creature.experience;
+        document.getElementById('modalRace').textContent = creature.race;
+        document.getElementById('modalSpeed').textContent = creature.speed_like;
+        document.getElementById('modalSummonable').textContent = creature.summonable;
+        document.getElementById('modalConvinceable').textContent = creature.convinceable;
+
+        // Configurar imagen de la criatura
+        const creatureImageName = getCreatureImageName(creature.name);
+        const modalImage = document.querySelector('.modal-creature-image');
+        modalImage.src = `images/creatures/${creatureImageName}`;
+        modalImage.alt = creature.name;
+
+// Si no encuentra la imagen, usa una por defecto
+        modalImage.onerror = function () {
+            this.src = 'images/creatures/default_item.png';
+            this.onerror = null; // evita bucle si la imagen por defecto tampoco carga
+        };
+
+        // Configurar items
         const itemsContainer = document.getElementById('modalItems');
+        itemsContainer.innerHTML = '';
+
         if (creature.items && creature.items.length > 0) {
             creature.items.forEach(itemUrl => {
                 const itemName = getItemImageName(itemUrl);
@@ -99,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 itemImage.alt = itemName.replace('.gif', '');
                 itemImage.className = 'modal-item-image';
                 itemImage.onerror = function() {
-                    this.src = 'images/default_item.gif';
+                    this.src = 'images/default_item.png';
                     this.onerror = null;
                 };
                 itemsContainer.appendChild(itemImage);
@@ -112,18 +103,15 @@ document.addEventListener('DOMContentLoaded', function() {
         setupList('modalImmunities', creature.immunities, 'noImmunities');
         setupList('modalVoices', creature.voices, 'noVoices');
 
-        // Aplicar traducciones al modal
+        // Aplicar traducciones
         translateModalContent();
 
         // Mostrar modal
         modal.style.display = 'block';
-
-        // Configurar evento para cerrar modal
-        document.querySelector('.close').addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
     }
-
+    function closeModal() {
+        document.getElementById('creatureModal').style.display = 'none';
+    }
     // Funciones auxiliares
     function getCreatureImageName(creatureName) {
         return creatureName.toLowerCase().replace(/\s+/g, '_') + '.gif';
@@ -149,32 +137,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function translateModalContent() {
-        // Traducir etiquetas de los campos
-        const fields = ['Health', 'Exp', 'Race', 'Speed', 'Summonable', 'Convinceable'];
+        // Traducir etiquetas
+        const fields = ['Speed', 'Summonable', 'Convinceable'];
         fields.forEach(field => {
-            const element = document.getElementById(`modal${field}`);
-            if (element) {
-                const label = element.previousElementSibling;
-                if (label && label.tagName === 'STRONG' && translations[currentLanguage][`modal${field}`]) {
-                    label.textContent = translations[currentLanguage][`modal${field}`] + ":";
-                }
+            const element = document.querySelector(`[data-i18n="modal${field}"]`);
+            if (element && translations[currentLanguage][`modal${field}`]) {
+                element.textContent = translations[currentLanguage][`modal${field}`];
             }
         });
 
         // Traducir secciones
-        const sections = ['immunities', 'voices', 'droppedItems'];
+        const sections = ['details', 'immunities', 'voices', 'droppedItems'];
         sections.forEach(section => {
             const element = document.querySelector(`[data-i18n="${section}"]`);
             if (element && translations[currentLanguage][section]) {
                 element.textContent = translations[currentLanguage][section];
-            }
-        });
-
-        // Traducir "no items" si existe
-        const noItemsElements = document.querySelectorAll('.modal-items p');
-        noItemsElements.forEach(element => {
-            if (translations[currentLanguage]['noItems']) {
-                element.textContent = translations[currentLanguage]['noItems'];
             }
         });
     }
@@ -190,15 +167,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Filtrar por término de búsqueda
         if (searchTerm) {
             filtered = filtered.filter(creature =>
-                creature.name.toLowerCase().includes(searchTerm)
-            );
+                creature.name.toLowerCase().includes(searchTerm))
         }
 
         // Filtrar por raza
         if (selectedRace) {
             filtered = filtered.filter(creature =>
-                creature.race === selectedRace
-            );
+                creature.race === selectedRace)
         }
 
         // Ordenar
@@ -240,6 +215,9 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('preferredLanguage', lang);
         applyTranslations();
         filterCreatures();
+
+        // Disparar evento personalizado
+        document.dispatchEvent(new CustomEvent('languageChanged', { detail: lang }));
     }
 
     function applyTranslations() {
@@ -258,23 +236,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 element.setAttribute('placeholder', translations[currentLanguage][key]);
             }
         });
+
+        // Opciones de select
+        document.querySelectorAll('select option').forEach(option => {
+            const key = option.getAttribute('data-i18n');
+            if (key && translations[currentLanguage][key]) {
+                option.textContent = translations[currentLanguage][key];
+            }
+        });
     }
 
     // Configurar botones de idioma
     langEsBtn.addEventListener('click', () => setLanguage('es'));
     langEnBtn.addEventListener('click', () => setLanguage('en'));
-
-    // Evento para cambios de idioma
-    document.addEventListener('languageChanged', (e) => {
-        currentLanguage = e.detail;
-        updateLanguageButtons();
-        applyTranslations();
-
-        // Si el modal está abierto, retraducir su contenido
-        if (modal.style.display === 'block') {
-            translateModalContent();
-        }
-    });
 
     // Inicializar
     updateLanguageButtons();
