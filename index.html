@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="title">Catálogo de Criaturas de Tibia</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+  <div class="language-switcher">
+    <button id="langEs">ES</button>
+    <button id="langEn">EN</button>
+  </div>
+  <h1 data-i18n="mainTitle">Catálogo de Criaturas de Tibia</h1>
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Buscar criatura..." data-i18n-placeholder="searchPlaceholder">
+    <button id="searchButton" data-i18n="searchButton">Buscar</button>
+  </div>
+  <div class="filters">
+    <select id="raceFilter">
+      <option value="" data-i18n="allRaces">Todas las razas</option>
+      <option value="Blood">Blood</option>
+      <option value="Undead">Undead</option>
+      <option value="Venom">Venom</option>
+      <option value="Fire">Fire</option>
+      <option value="Energy">Energy</option>
+    </select>
+    <select id="sortFilter">
+      <option value="name" data-i18n="sortName">Ordenar por nombre</option>
+      <option value="health" data-i18n="sortHealth">Ordenar por salud (mayor a menor)</option>
+      <option value="experience" data-i18n="sortExp">Ordenar por experiencia (mayor a menor)</option>
+    </select>
+  </div>
+</header>
+
+<main>
+  <div id="creaturesContainer" class="creatures-grid"></div>
+</main>
+
+<div id="creatureModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <div class="modal-body">
+      <div class="modal-left">
+        <p><strong data-i18n="health">Salud:</strong> <span id="modalHealth"></span></p>
+        <p><strong data-i18n="experience">Experiencia:</strong> <span id="modalExp"></span></p>
+        <p><strong data-i18n="race">Raza:</strong> <span id="modalRace"></span></p>
+        <p><strong data-i18n="speed">Velocidad:</strong> <span id="modalSpeed"></span></p>
+        <p><strong data-i18n="summonable">Invocable:</strong> <span id="modalSummonable"></span></p>
+        <p><strong data-i18n="convinceable">Convenceable:</strong> <span id="modalConvinceable"></span></p>
+      </div>
+      <div class="modal-right">
+        <h3 data-i18n="immunities">Inmunidades:</h3>
+        <ul id="modalImmunities"></ul>
+        <h3 data-i18n="voices">Frases:</h3>
+        <ul id="modalVoices"></ul>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <!-- Se ha eliminado el enlace <a id="modalUrl" href="#" target="_blank" data-i18n="moreDetails">Ver más detalles</a> -->
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p data-i18n="dataSource">Datos obtenidos de loney-online.com</p>
+  <p data-i18n="copyright">© 2023 Catálogo de Criaturas de Tibia - No afiliado a CipSoft</p>
+</footer>
+
+<script src="js/translations.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
