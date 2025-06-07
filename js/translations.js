@@ -22,7 +22,11 @@ const translations = {
         "copyright": "© 2023 Catálogo de Criaturas de Tibia - No afiliado a CipSoft",
         "noImmunities": "Ninguna",
         "noVoices": "No habla",
-        "noItems": "No suelta items"
+        "noItems": "No suelta items",
+        "searchItemPlaceholder": "Buscar ítem...",
+        "searchItemButton": "Buscar ítem",
+        "creaturesDropping": "Criaturas que dropean:",
+        "noCreaturesDropping": "Ninguna criatura dropea este ítem"
     },
     "en": {
         "title": "Tibia Creatures Catalog",
@@ -47,7 +51,11 @@ const translations = {
         "copyright": "© 2023 Tibia Creatures Catalog - Not affiliated with CipSoft",
         "noImmunities": "None",
         "noVoices": "Doesn't speak",
-        "noItems": "No items dropped"
+        "noItems": "No items dropped",
+        "searchItemPlaceholder": "Search item...",
+        "searchItemButton": "Search item",
+        "creaturesDropping": "Creatures dropping:",
+        "noCreaturesDropping": "No creatures drop this item"
     }
 };
 

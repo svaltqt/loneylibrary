@@ -16,9 +16,10 @@
   <h1 data-i18n="mainTitle">Catálogo de Criaturas de Tibia</h1>
   <div class="search-container">
     <div class="search-group">
-      <input type="text" id="searchInput" placeholder="Buscar criatura..." data-i18n-placeholder="searchPlaceholder">
-      <button id="searchButton" data-i18n="searchButton">Buscar</button>
+      <input type="text" id="searchInput" class="search-input" placeholder="Buscar criatura..." data-i18n-placeholder="searchPlaceholder">
+      <button id="searchButton" class="search-button" data-i18n="searchButton">Buscar</button>
     </div>
+
     <div class="filters">
       <select id="raceFilter">
         <option value="" data-i18n="allRaces">Todas las razas</option>
@@ -33,6 +34,13 @@
         <option value="health" data-i18n="sortHealth">Ordenar por salud</option>
         <option value="experience" data-i18n="sortExp">Ordenar por experiencia</option>
       </select>
+    </div>
+    <div class="search-group">
+      <div class="input-wrapper">
+        <input type="text" id="searchItemInput" class="search-input" placeholder="Buscar ítem..." data-i18n-placeholder="searchItemPlaceholder">
+        <ul id="itemSuggestions" class="suggestions-list"></ul>
+      </div>
+      <button id="searchItemButton" class="search-button" data-i18n="searchButton">Buscar</button>
     </div>
   </div>
 </header>
@@ -96,5 +104,6 @@
 
 <script src="./js/translations.js"></script>
 <script src="./js/script.js"></script>
+<script src="./js/autocomplete.js"></script>
 </body>
 </html>
