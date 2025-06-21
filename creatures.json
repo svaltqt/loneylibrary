@@ -1743,7 +1743,6 @@
       "You're no match for me!"
     ],
     "items": [
-      "1987",
       "2148",
       "2389",
       "5880",
@@ -4689,24 +4688,15 @@
       "I WILL PROTECT MY BROOD!"
     ],
     "items": [
-      "2148",
-      "1987",
+      "2160",
       "12774",
-      "2148",
       "3976",
       "2672",
       "2796",
       "2413",
-      "5948",
-      "5882",
       "1976",
       "2547",
       "2546",
-      "2146",
-      "2392",
-      "2528",
-      "5919",
-      "2149",
       "2498",
       "2492"
     ]
@@ -4736,7 +4726,6 @@
     ],
     "items": [
       "2148",
-      "1987",
       "2148",
       "2148",
       "2387",
@@ -4749,17 +4738,17 @@
       "2176",
       "7382",
       "2418",
-      "2165",
       "6550",
+      "2165",
       "1982",
+      "2462",
       "2432",
       "7368",
-      "2462",
       "2179",
       "5954",
       "5906",
-      "2171",
       "12665",
+      "2171",
       "2520",
       "2396",
       "2514",
@@ -6549,8 +6538,8 @@
   {
     "name": "Elite Warlock",
     "url": "http://loney-online.com/?subtopic=creatures&creature=Elite+Warlock",
-    "health": "23500",
-    "experience": "25700",
+    "health": "15000",
+    "experience": "16250",
     "summon_mana": "---",
     "convince_mana": "---",
     "race": "Blood",
@@ -7539,8 +7528,8 @@
   {
     "name": "Flaming Memory",
     "url": "http://loney-online.com/?subtopic=creatures&creature=Flaming+Memory",
-    "health": "338555",
-    "experience": "180000",
+    "health": "638555",
+    "experience": "2000000",
     "summon_mana": "---",
     "convince_mana": "---",
     "race": "Undead",
@@ -7558,15 +7547,16 @@
       "I'll geeet rid of yooou!"
     ],
     "items": [
+      "12646",
       "2152",
+      "12989",
+      "2519",
+      "12818",
+      "9933",
       "7760",
       "12945",
       "2154",
-      "2519",
-      "7899",
-      "7900",
-      "12818",
-      "9933"
+      "7900"
     ]
   },
   {
@@ -21706,6 +21696,591 @@
       "12544",
       "13191",
       "9633"
+    ]
+  },
+  {
+    "name": "A Memory of a Djinn",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=A+Memory+of+a+Djinn",
+    "health": "10000",
+    "experience": "10000",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Blood",
+    "speed_like": "165 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "energy",
+      "fire",
+      "poison",
+      "lifedrain",
+      "paralyze",
+      "outfit",
+      "drunk",
+      "invisible"
+    ],
+    "voices": [],
+    "items": []
+  },
+  {
+    "name": "An Unstable Wall",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=An+Unstable+Wall",
+    "health": "900000",
+    "experience": "500000",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Undead",
+    "speed_like": "1 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [],
+    "voices": [],
+    "items": []
+  },
+  {
+    "name": "Big Blob",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Big+Blob",
+    "health": "815000",
+    "experience": "670000",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Venom",
+    "speed_like": "1 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "paralyze",
+      "invisible"
+    ],
+    "voices": [
+      "FSSSSSSTTTTTBBBBLLLLLOOOOBBBBBB."
+    ],
+    "items": [
+      "2160",
+      "2522"
+    ]
+  },
+  {
+    "name": "Dimension Devourer",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Dimension+Devourer",
+    "health": "335000",
+    "experience": "600000",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Undead",
+    "speed_like": "1 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "paralyze",
+      "drunk",
+      "invisible"
+    ],
+    "voices": [],
+    "items": [
+      "2160",
+      "13071",
+      "12697",
+      "12769",
+      "13027"
+    ]
+  },
+  {
+    "name": "Dimensional Barrier",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Dimensional+Barrier",
+    "health": "500000",
+    "experience": "2",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Undead",
+    "speed_like": "1 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [],
+    "voices": [],
+    "items": []
+  },
+  {
+    "name": "Dimensional Pilgrim",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Dimensional+Pilgrim",
+    "health": "11200",
+    "experience": "14400",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Blood",
+    "speed_like": "5 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "outfit",
+      "drunk",
+      "invisible"
+    ],
+    "voices": [],
+    "items": []
+  },
+  {
+    "name": "Diredread Fiend",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Diredread+Fiend",
+    "health": "11400",
+    "experience": "13000",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Fire",
+    "speed_like": "90 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "lifedrain",
+      "paralyze",
+      "invisible"
+    ],
+    "voices": [
+      "DIREEEEDREEAAAAD!"
+    ],
+    "items": [
+      "2148",
+      "2472"
+    ]
+  },
+  {
+    "name": "Diredread Overcore",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Diredread+Overcore",
+    "health": "35000",
+    "experience": "40100",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Blood",
+    "speed_like": "115 level (Can use haste)",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "paralyze",
+      "invisible"
+    ],
+    "voices": [
+      "AAAAAAAAAAARGHHHHH!",
+      "UTH GROK CHAMAN!",
+      "DIREEEEEE"
+    ],
+    "items": [
+      "2152",
+      "2678",
+      "7368",
+      "2795",
+      "2520",
+      "7891",
+      "7900",
+      "2176",
+      "7899",
+      "2645",
+      "1982"
+    ]
+  },
+  {
+    "name": "Direimp Guard",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Direimp+Guard",
+    "health": "49760",
+    "experience": "32500",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Blood",
+    "speed_like": "215 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "paralyze",
+      "invisible",
+      "fire",
+      "death",
+      "energy",
+      "lifedrain",
+      "ice",
+      "earth"
+    ],
+    "voices": [
+      "Who are you to threat me like this!?",
+      "You will never have the treasures!",
+      "I can feel nothing you do to me!",
+      "HA HA HA HA!"
+    ],
+    "items": [
+      "2160",
+      "7891",
+      "2156",
+      "2432",
+      "5954",
+      "2133",
+      "6534"
+    ]
+  },
+  {
+    "name": "Dread Maw",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Dread+Maw",
+    "health": "12050",
+    "experience": "14444",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Blood",
+    "speed_like": "57 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "paralyze",
+      "invisible"
+    ],
+    "voices": [
+      "Maaaaaaaaw!",
+      "CLOMP!"
+    ],
+    "items": [
+      "2152",
+      "2155",
+      "7887",
+      "2432",
+      "7884"
+    ]
+  },
+  {
+    "name": "Dreadbarrier",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Dreadbarrier",
+    "health": "200000",
+    "experience": "0",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Undead",
+    "speed_like": "1 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "paralyze",
+      "outfit",
+      "drunk",
+      "invisible"
+    ],
+    "voices": [],
+    "items": []
+  },
+  {
+    "name": "Dreadblood Imp",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Dreadblood+Imp",
+    "health": "17800",
+    "experience": "18290",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Blood",
+    "speed_like": "190 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "paralyze",
+      "invisible"
+    ],
+    "voices": [
+      "Hee hee!",
+      "Brzpchhhh!"
+    ],
+    "items": [
+      "2152",
+      "2679",
+      "2548",
+      "2486",
+      "2156",
+      "2520"
+    ]
+  },
+  {
+    "name": "Dreadfury",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Dreadfury",
+    "health": "13200",
+    "experience": "16888",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Blood",
+    "speed_like": "35 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "paralyze",
+      "invisible"
+    ],
+    "voices": [
+      "What!!!???!!!",
+      "HAAAAWWWW",
+      "ZCHUUUM!"
+    ],
+    "items": [
+      "2152",
+      "2450",
+      "2032",
+      "2541",
+      "2195"
+    ]
+  },
+  {
+    "name": "Gold Snatcher Defiler",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Gold+Snatcher+Defiler",
+    "health": "215000",
+    "experience": "123000",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Venom",
+    "speed_like": "90 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "paralyze",
+      "invisible"
+    ],
+    "voices": [
+      "BBBVLOOOBBBB..."
+    ],
+    "items": [
+      "2160",
+      "13191",
+      "2155",
+      "13089",
+      "12982"
+    ]
+  },
+  {
+    "name": "Heavy Crate",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Heavy+Crate",
+    "health": "7000",
+    "experience": "0",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Undead",
+    "speed_like": "1 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [],
+    "voices": [],
+    "items": []
+  },
+  {
+    "name": "Istela",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Istela",
+    "health": "25500",
+    "experience": "28250",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Blood",
+    "speed_like": "68 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "death",
+      "paralyze",
+      "invisible",
+      "ice"
+    ],
+    "voices": [
+      "Are you good to save a secret?",
+      "You presence here was very unannounced.",
+      "Embrace to the waterfall!",
+      "You will drown in our wishes!"
+    ],
+    "items": [
+      "2160",
+      "2152",
+      "7895",
+      "2466",
+      "7368",
+      "12544",
+      "13103"
+    ]
+  },
+  {
+    "name": "Mystic Branch",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Mystic+Branch",
+    "health": "1",
+    "experience": "0",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Undead",
+    "speed_like": "1 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "physical",
+      "energy",
+      "fire",
+      "poison",
+      "lifedrain",
+      "paralyze",
+      "outfit",
+      "drunk",
+      "invisible"
+    ],
+    "voices": [],
+    "items": []
+  },
+  {
+    "name": "Ralentizer",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Ralentizer",
+    "health": "1",
+    "experience": "0",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Undead",
+    "speed_like": "1 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "physical",
+      "energy",
+      "fire",
+      "poison",
+      "lifedrain",
+      "paralyze",
+      "outfit",
+      "drunk",
+      "invisible"
+    ],
+    "voices": [],
+    "items": []
+  },
+  {
+    "name": "Skeleton Elite Soldier",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Skeleton+Elite+Soldier",
+    "health": "8120",
+    "experience": "8000",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Undead",
+    "speed_like": "65 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "invisible",
+      "drunk"
+    ],
+    "voices": [],
+    "items": [
+      "2152",
+      "2158",
+      "2645",
+      "2472"
+    ]
+  },
+  {
+    "name": "Skeleton-Trained Scarab",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Skeleton-Trained+Scarab",
+    "health": "9700",
+    "experience": "10500",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Undead",
+    "speed_like": "240 level (Can use haste)",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "paralyze",
+      "invisible"
+    ],
+    "voices": [],
+    "items": [
+      "2152"
+    ]
+  },
+  {
+    "name": "Souless Dire Citizen",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Souless+Dire+Citizen",
+    "health": "1",
+    "experience": "0",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Undead",
+    "speed_like": "1 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "physical",
+      "energy",
+      "fire",
+      "poison",
+      "lifedrain",
+      "paralyze",
+      "outfit",
+      "drunk",
+      "invisible"
+    ],
+    "voices": [
+      "That was tough!",
+      "You did it!",
+      "Let's gooooo!",
+      "Come on!",
+      "You are brilliant!",
+      "Direhero!",
+      "You are a brave adventurer!",
+      "The path was hard but now we respect you!",
+      "THAT HURT!",
+      "AYYYYYYY!",
+      "Let's celebrate this one!",
+      "You can defeat the enemy easy!",
+      "The evil is almost gone!",
+      "Cheers!",
+      "Ahhhhh!",
+      "Look!"
+    ],
+    "items": []
+  },
+  {
+    "name": "Swamparalyze",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Swamparalyze",
+    "health": "1",
+    "experience": "0",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Undead",
+    "speed_like": "1 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "physical",
+      "energy",
+      "fire",
+      "poison",
+      "lifedrain",
+      "paralyze",
+      "outfit",
+      "drunk",
+      "invisible"
+    ],
+    "voices": [],
+    "items": []
+  },
+  {
+    "name": "Waterfall Maid",
+    "url": "http://loney-online.com/?subtopic=creatures&creature=Waterfall+Maid",
+    "health": "7000",
+    "experience": "7650",
+    "summon_mana": "---",
+    "convince_mana": "---",
+    "race": "Blood",
+    "speed_like": "35 level",
+    "summonable": "Impossible",
+    "convinceable": "Impossible",
+    "immunities": [
+      "death",
+      "paralyze",
+      "invisible",
+      "ice"
+    ],
+    "voices": [
+      "Are you good to save a secret?",
+      "You presence here was very unannounced.",
+      "Embrace to the waterfall!",
+      "You will drown in our wishes!"
+    ],
+    "items": [
+      "2148",
+      "2152",
+      "6500",
+      "7368",
+      "2177",
+      "2466"
     ]
   }
 ]
