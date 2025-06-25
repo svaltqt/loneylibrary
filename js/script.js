@@ -32,6 +32,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayCreatures(creatures) {
         creaturesContainer.innerHTML = '';
 
+        if (creatures.length === 0) {
+            creaturesContainer.innerHTML = `
+                <div class="no-results">${translations[currentLanguage]['noCreaturesDropping'] || 'No se encontraron criaturas'}</div>
+            `;
+            return;
+        }
+
         creatures.forEach(creature => {
             const creatureRow = createCreatureRow(creature);
             creaturesContainer.appendChild(creatureRow);
@@ -83,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (filteredItems.length === 0) {
             creaturesContainer.innerHTML = `
-                <p class="no-results">${translations[currentLanguage]['noCreaturesDropping']}</p>
+                <div class="no-results">${translations[currentLanguage]['noCreaturesDropping'] || 'Ninguna criatura dropea este ítem'}</div>
             `;
             return;
         }
@@ -94,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const itemTitle = document.createElement('h2');
             itemTitle.className = 'item-title';
-            itemTitle.textContent = `${item.name} (${translations[currentLanguage]['creaturesDropping']})`;
+            itemTitle.textContent = `${item.name} (${translations[currentLanguage]['creaturesDropping'] || 'Criaturas que dropean:'})`;
 
             itemSection.appendChild(itemTitle);
 
@@ -103,8 +110,9 @@ document.addEventListener('DOMContentLoaded', function() {
             );
 
             if (creaturesDropping.length === 0) {
-                const noCreatures = document.createElement('p');
-                noCreatures.textContent = translations[currentLanguage]['noCreaturesDropping'];
+                const noCreatures = document.createElement('div');
+                noCreatures.className = 'no-results';
+                noCreatures.textContent = translations[currentLanguage]['noCreaturesDropping'] || 'Ninguna criatura dropea este ítem';
                 itemSection.appendChild(noCreatures);
             } else {
                 creaturesDropping.forEach(creature => {
@@ -123,9 +131,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modalHealth').textContent = creature.health;
         document.getElementById('modalExp').textContent = creature.experience;
         document.getElementById('modalRace').textContent = creature.race;
-        document.getElementById('modalSpeed').textContent = creature.speed_like;
-        document.getElementById('modalSummonable').textContent = creature.summonable;
-        document.getElementById('modalConvinceable').textContent = creature.convinceable;
+        document.getElementById('modalSpeed').textContent = creature.speed_like || 'N/A';
+        document.getElementById('modalSummonable').textContent = creature.summonable || 'No';
+        document.getElementById('modalConvinceable').textContent = creature.convinceable || 'No';
 
         const creatureImageName = getCreatureImageName(creature.name);
         const modalImage = document.querySelector('.modal-creature-image');
@@ -153,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 itemsContainer.appendChild(itemImage);
             });
         } else {
-            itemsContainer.innerHTML = `<p>${translations[currentLanguage]['noItems']}</p>`;
+            itemsContainer.innerHTML = `<div class="no-results">${translations[currentLanguage]['noItems'] || 'No suelta items'}</div>`;
         }
 
         setupList('modalImmunities', creature.immunities, 'noImmunities');
@@ -173,16 +181,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function setupList(elementId, items, noItemsTranslationKey) {
         const listElement = document.getElementById(elementId);
+        if (!listElement) return;
+        
         listElement.innerHTML = '';
 
         if (items && items.length > 0) {
             items.forEach(item => {
                 const li = document.createElement('li');
                 li.textContent = elementId === 'modalVoices' ? `"${item}"` : item;
+                li.style.padding = 'var(--space-sm) 0';
+                li.style.borderBottom = '1px solid var(--border-primary)';
+                li.style.color = 'var(--text-primary)';
                 listElement.appendChild(li);
             });
         } else {
-            listElement.innerHTML = `<li>${translations[currentLanguage][noItemsTranslationKey]}</li>`;
+            const li = document.createElement('li');
+            li.textContent = translations[currentLanguage][noItemsTranslationKey] || 'Ninguno';
+            li.style.padding = 'var(--space-sm) 0';
+            li.style.color = 'var(--text-secondary)';
+            li.style.fontStyle = 'italic';
+            listElement.appendChild(li);
         }
     }
 
@@ -190,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const fields = ['Speed', 'Summonable', 'Convinceable'];
         fields.forEach(field => {
             const element = document.querySelector(`[data-i18n="modal${field}"]`);
-            if (element && translations[currentLanguage][`modal${field}`]) {
+            if (element && translations[currentLanguage] && translations[currentLanguage][`modal${field}`]) {
                 element.textContent = translations[currentLanguage][`modal${field}`];
             }
         });
@@ -198,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const sections = ['details', 'immunities', 'voices', 'droppedItems'];
         sections.forEach(section => {
             const element = document.querySelector(`[data-i18n="${section}"]`);
-            if (element && translations[currentLanguage][section]) {
+            if (element && translations[currentLanguage] && translations[currentLanguage][section]) {
                 element.textContent = translations[currentLanguage][section];
             }
         });
@@ -210,16 +228,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedRace = raceFilter.value;
         const sortBy = sortFilter.value;
 
-        let filtered = creaturesData;
+        let filtered = [...creaturesData];
 
         if (searchTerm) {
             filtered = filtered.filter(creature =>
-                creature.name.toLowerCase().includes(searchTerm))
+                creature.name.toLowerCase().includes(searchTerm)
+            );
         }
 
         if (selectedRace) {
             filtered = filtered.filter(creature =>
-                creature.race === selectedRace)
+                creature.race === selectedRace
+            );
         }
 
         if (sortBy === 'name') {
@@ -234,16 +254,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Event listeners
-    searchButton.addEventListener('click', filterCreatures);
-    searchInput.addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') filterCreatures();
-    });
-    searchItemButton.addEventListener('click', searchItems);
-    searchItemInput.addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') searchItems();
-    });
-    raceFilter.addEventListener('change', filterCreatures);
-    sortFilter.addEventListener('change', filterCreatures);
+    if (searchButton) {
+        searchButton.addEventListener('click', filterCreatures);
+    }
+    
+    if (searchInput) {
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') filterCreatures();
+        });
+        searchInput.addEventListener('input', filterCreatures);
+    }
+    
+    if (searchItemButton) {
+        searchItemButton.addEventListener('click', searchItems);
+    }
+    
+    if (searchItemInput) {
+        searchItemInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') searchItems();
+        });
+    }
+    
+    if (raceFilter) {
+        raceFilter.addEventListener('change', filterCreatures);
+    }
+    
+    if (sortFilter) {
+        sortFilter.addEventListener('change', filterCreatures);
+    }
+
+    // Cerrar modal
+    const closeBtn = document.querySelector('.close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    }
 
     // Cerrar modal al hacer clic fuera
     window.addEventListener('click', (event) => {
@@ -254,8 +300,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Manejo de idiomas
     function updateLanguageButtons() {
-        langEsBtn.classList.toggle('active', currentLanguage === 'es');
-        langEnBtn.classList.toggle('active', currentLanguage === 'en');
+        if (langEsBtn && langEnBtn) {
+            langEsBtn.classList.toggle('active', currentLanguage === 'es');
+            langEnBtn.classList.toggle('active', currentLanguage === 'en');
+        }
     }
 
     function setLanguage(lang) {
@@ -268,6 +316,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function applyTranslations() {
+        if (!translations[currentLanguage]) return;
+
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.getAttribute('data-i18n');
             if (translations[currentLanguage][key]) {
@@ -291,8 +341,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Configurar botones de idioma
-    langEsBtn.addEventListener('click', () => setLanguage('es'));
-    langEnBtn.addEventListener('click', () => setLanguage('en'));
+    if (langEsBtn) {
+        langEsBtn.addEventListener('click', () => setLanguage('es'));
+    }
+    
+    if (langEnBtn) {
+        langEnBtn.addEventListener('click', () => setLanguage('en'));
+    }
 
     // Inicializar
     updateLanguageButtons();

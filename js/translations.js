@@ -12,9 +12,9 @@ const translations = {
         "health": "Salud",
         "experience": "Experiencia",
         "race": "Raza",
-        "modalSpeed": "Velocidad",
-        "modalSummonable": "Invocable",
-        "modalConvinceable": "Convenceable",
+        "modalSpeed": "Velocidad:",
+        "modalSummonable": "Invocable:",
+        "modalConvinceable": "Convenceable:",
         "immunities": "Inmunidades",
         "voices": "Frases",
         "droppedItems": "Items que suelta",
@@ -41,9 +41,9 @@ const translations = {
         "health": "Health",
         "experience": "Experience",
         "race": "Race",
-        "modalSpeed": "Speed",
-        "modalSummonable": "Summonable",
-        "modalConvinceable": "Convinceable",
+        "modalSpeed": "Speed:",
+        "modalSummonable": "Summonable:",
+        "modalConvinceable": "Convinceable:",
         "immunities": "Immunities",
         "voices": "Voices",
         "droppedItems": "Dropped items",
@@ -59,6 +59,7 @@ const translations = {
     }
 };
 
+// Initialize current language from localStorage or default to Spanish
 let currentLanguage = localStorage.getItem('preferredLanguage') || 'es';
 
 function setLanguage(lang) {
@@ -67,12 +68,17 @@ function setLanguage(lang) {
     localStorage.setItem('preferredLanguage', lang);
     applyTranslations();
 
-    // Disparar evento personalizado
+    // Dispatch custom event for other scripts to listen to
     document.dispatchEvent(new CustomEvent('languageChanged', { detail: lang }));
 }
 
 function applyTranslations() {
-    // Elementos estáticos
+    if (!translations[currentLanguage]) {
+        console.warn(`Translations not found for language: ${currentLanguage}`);
+        return;
+    }
+
+    // Static elements with data-i18n attribute
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
         if (translations[currentLanguage][key]) {
@@ -80,16 +86,29 @@ function applyTranslations() {
         }
     });
 
-    // Placeholders
+    // Placeholder attributes
     document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
         const key = element.getAttribute('data-i18n-placeholder');
         if (translations[currentLanguage][key]) {
             element.setAttribute('placeholder', translations[currentLanguage][key]);
         }
     });
+
+    // Select options
+    document.querySelectorAll('select option[data-i18n]').forEach(option => {
+        const key = option.getAttribute('data-i18n');
+        if (translations[currentLanguage][key]) {
+            option.textContent = translations[currentLanguage][key];
+        }
+    });
 }
 
-// Inicialización
+// Initialize translations when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    setLanguage(currentLanguage);
+    applyTranslations();
 });
+
+// Export for use in other scripts
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { translations, currentLanguage, setLanguage, applyTranslations };
+}
