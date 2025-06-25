@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing app...');
+    
     // Elementos del DOM
     const creaturesContainer = document.getElementById('creaturesContainer');
     const searchInput = document.getElementById('searchInput');
@@ -11,30 +13,93 @@ document.addEventListener('DOMContentLoaded', function() {
     const langEsBtn = document.getElementById('langEs');
     const langEnBtn = document.getElementById('langEn');
 
+    // Verificar que los elementos existen
+    if (!creaturesContainer) {
+        console.error('creaturesContainer not found');
+        return;
+    }
+
     let creaturesData = [];
     let itemsData = [];
     let currentLanguage = localStorage.getItem('preferredLanguage') || 'es';
 
+    // Mostrar mensaje de carga
+    creaturesContainer.innerHTML = '<div class="no-results">Cargando criaturas...</div>';
+
     // Cargar datos del JSON de criaturas e items
+    console.log('Loading data files...');
+    
     Promise.all([
-        fetch('creatures.json').then(res => res.json()),
-        fetch('items_to_creatures.json').then(res => res.json())
+        fetch('./creatures.json')
+            .then(res => {
+                console.log('Creatures response status:', res.status);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            })
+            .catch(err => {
+                console.error('Error loading creatures.json:', err);
+                return [];
+            }),
+        fetch('./items_to_creatures.json')
+            .then(res => {
+                console.log('Items response status:', res.status);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            })
+            .catch(err => {
+                console.error('Error loading items_to_creatures.json:', err);
+                return [];
+            })
     ])
-        .then(([creatures, items]) => {
-            creaturesData = creatures;
-            itemsData = items;
+    .then(([creatures, items]) => {
+        console.log('Data loaded:', creatures.length, 'creatures,', items.length, 'items');
+        creaturesData = creatures;
+        itemsData = items;
+        
+        if (creaturesData.length === 0) {
+            creaturesContainer.innerHTML = '<div class="no-results">No se pudieron cargar las criaturas. Verifica que el archivo creatures.json existe.</div>';
+        } else {
             displayCreatures(creaturesData);
-            updateLanguageButtons();
-        })
-        .catch(error => console.error('Error loading data:', error));
+        }
+        
+        updateLanguageButtons();
+        populateRaceFilter();
+    })
+    .catch(error => {
+        console.error('Error loading data:', error);
+        creaturesContainer.innerHTML = '<div class="no-results">Error cargando datos. Verifica que los archivos JSON existen.</div>';
+    });
+
+    // Poblar filtro de razas
+    function populateRaceFilter() {
+        if (!raceFilter || creaturesData.length === 0) return;
+        
+        const races = [...new Set(creaturesData.map(creature => creature.race))].sort();
+        
+        // Limpiar opciones existentes excepto la primera
+        while (raceFilter.children.length > 1) {
+            raceFilter.removeChild(raceFilter.lastChild);
+        }
+        
+        races.forEach(race => {
+            if (race) {
+                const option = document.createElement('option');
+                option.value = race;
+                option.textContent = race;
+                raceFilter.appendChild(option);
+            }
+        });
+    }
 
     // Mostrar criaturas en lista
     function displayCreatures(creatures) {
+        if (!creaturesContainer) return;
+        
         creaturesContainer.innerHTML = '';
 
-        if (creatures.length === 0) {
+        if (!creatures || creatures.length === 0) {
             creaturesContainer.innerHTML = `
-                <div class="no-results">${translations[currentLanguage]['noCreaturesDropping'] || 'No se encontraron criaturas'}</div>
+                <div class="no-results">${translations[currentLanguage]?.noCreaturesDropping || 'No se encontraron criaturas'}</div>
             `;
             return;
         }
@@ -43,6 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const creatureRow = createCreatureRow(creature);
             creaturesContainer.appendChild(creatureRow);
         });
+        
+        console.log('Displayed', creatures.length, 'creatures');
     }
 
     // Crear fila de criatura (reutilizable)
@@ -61,10 +128,10 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="creature-info">
                 <h3 class="creature-name">${creature.name}</h3>
                 <div class="creature-meta">
-                    <span class="creature-race">${creature.race}</span>
+                    <span class="creature-race">${creature.race || 'Unknown'}</span>
                     <div class="creature-stats">
-                        <span class="creature-stat">❤️ ${creature.health}</span>
-                        <span class="creature-stat">⭐ ${creature.experience}</span>
+                        <span class="creature-stat">❤️ ${creature.health || 0}</span>
+                        <span class="creature-stat">⭐ ${creature.experience || 0}</span>
                     </div>
                 </div>
             </div>
@@ -76,21 +143,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Buscar ítems y mostrar criaturas que los dropean
     function searchItems() {
-        const searchTerm = searchItemInput.value.toLowerCase().trim();
+        const searchTerm = searchItemInput?.value?.toLowerCase()?.trim();
+        console.log('Searching items for:', searchTerm);
+        
         if (!searchTerm) {
-            displayCreatures(creaturesData); // Si está vacío, muestra todas las criaturas
+            displayCreatures(creaturesData);
+            return;
+        }
+
+        if (!itemsData || itemsData.length === 0) {
+            creaturesContainer.innerHTML = '<div class="no-results">No se pudieron cargar los datos de items</div>';
             return;
         }
 
         const filteredItems = itemsData.filter(item =>
-            item.name.toLowerCase().includes(searchTerm)
+            item.name && item.name.toLowerCase().includes(searchTerm)
         );
+
+        console.log('Found items:', filteredItems.length);
 
         creaturesContainer.innerHTML = '';
 
         if (filteredItems.length === 0) {
             creaturesContainer.innerHTML = `
-                <div class="no-results">${translations[currentLanguage]['noCreaturesDropping'] || 'Ninguna criatura dropea este ítem'}</div>
+                <div class="no-results">${translations[currentLanguage]?.noCreaturesDropping || 'No se encontraron items con ese nombre'}</div>
             `;
             return;
         }
@@ -101,18 +177,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const itemTitle = document.createElement('h2');
             itemTitle.className = 'item-title';
-            itemTitle.textContent = `${item.name} (${translations[currentLanguage]['creaturesDropping'] || 'Criaturas que dropean:'})`;
+            itemTitle.textContent = `${item.name} (${translations[currentLanguage]?.creaturesDropping || 'Criaturas que dropean:'})`;
 
             itemSection.appendChild(itemTitle);
 
             const creaturesDropping = creaturesData.filter(creature =>
-                item.dropped_by.includes(creature.name)
+                item.dropped_by && item.dropped_by.includes(creature.name)
             );
+
+            console.log('Creatures dropping', item.name, ':', creaturesDropping.length);
 
             if (creaturesDropping.length === 0) {
                 const noCreatures = document.createElement('div');
                 noCreatures.className = 'no-results';
-                noCreatures.textContent = translations[currentLanguage]['noCreaturesDropping'] || 'Ninguna criatura dropea este ítem';
+                noCreatures.textContent = translations[currentLanguage]?.noCreaturesDropping || 'Ninguna criatura dropea este ítem';
                 itemSection.appendChild(noCreatures);
             } else {
                 creaturesDropping.forEach(creature => {
@@ -127,47 +205,64 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Abrir modal con detalles de la criatura
     function openModal(creature) {
-        document.getElementById('modalTitle').textContent = creature.name;
-        document.getElementById('modalHealth').textContent = creature.health;
-        document.getElementById('modalExp').textContent = creature.experience;
-        document.getElementById('modalRace').textContent = creature.race;
-        document.getElementById('modalSpeed').textContent = creature.speed_like || 'N/A';
-        document.getElementById('modalSummonable').textContent = creature.summonable || 'No';
-        document.getElementById('modalConvinceable').textContent = creature.convinceable || 'No';
+        console.log('Opening modal for:', creature.name);
+        
+        const modalTitle = document.getElementById('modalTitle');
+        const modalHealth = document.getElementById('modalHealth');
+        const modalExp = document.getElementById('modalExp');
+        const modalRace = document.getElementById('modalRace');
+        const modalSpeed = document.getElementById('modalSpeed');
+        const modalSummonable = document.getElementById('modalSummonable');
+        const modalConvinceable = document.getElementById('modalConvinceable');
+
+        if (modalTitle) modalTitle.textContent = creature.name;
+        if (modalHealth) modalHealth.textContent = creature.health || 0;
+        if (modalExp) modalExp.textContent = creature.experience || 0;
+        if (modalRace) modalRace.textContent = creature.race || 'Unknown';
+        if (modalSpeed) modalSpeed.textContent = creature.speed_like || 'N/A';
+        if (modalSummonable) modalSummonable.textContent = creature.summonable || 'No';
+        if (modalConvinceable) modalConvinceable.textContent = creature.convinceable || 'No';
 
         const creatureImageName = getCreatureImageName(creature.name);
         const modalImage = document.querySelector('.modal-creature-image');
-        modalImage.src = `images/creatures/${creatureImageName}`;
-        modalImage.alt = creature.name;
-        modalImage.onerror = function() {
-            this.src = 'images/creatures/default_item.png';
-            this.onerror = null;
-        };
+        if (modalImage) {
+            modalImage.src = `images/creatures/${creatureImageName}`;
+            modalImage.alt = creature.name;
+            modalImage.onerror = function() {
+                this.src = 'images/creatures/default_item.png';
+                this.onerror = null;
+            };
+        }
 
         const itemsContainer = document.getElementById('modalItems');
-        itemsContainer.innerHTML = '';
+        if (itemsContainer) {
+            itemsContainer.innerHTML = '';
 
-        if (creature.items && creature.items.length > 0) {
-            creature.items.forEach(itemUrl => {
-                const itemName = getItemImageName(itemUrl);
-                const itemImage = document.createElement('img');
-                itemImage.src = `images/items/${itemName}`;
-                itemImage.alt = itemName.replace('.gif', '');
-                itemImage.className = 'modal-item-image';
-                itemImage.onerror = function() {
-                    this.src = 'images/default_item.png';
-                    this.onerror = null;
-                };
-                itemsContainer.appendChild(itemImage);
-            });
-        } else {
-            itemsContainer.innerHTML = `<div class="no-results">${translations[currentLanguage]['noItems'] || 'No suelta items'}</div>`;
+            if (creature.items && creature.items.length > 0) {
+                creature.items.forEach(itemUrl => {
+                    const itemName = getItemImageName(itemUrl);
+                    const itemImage = document.createElement('img');
+                    itemImage.src = `images/items/${itemName}`;
+                    itemImage.alt = itemName.replace('.gif', '');
+                    itemImage.className = 'modal-item-image';
+                    itemImage.onerror = function() {
+                        this.src = 'images/default_item.png';
+                        this.onerror = null;
+                    };
+                    itemsContainer.appendChild(itemImage);
+                });
+            } else {
+                itemsContainer.innerHTML = `<div class="no-results">${translations[currentLanguage]?.noItems || 'No suelta items'}</div>`;
+            }
         }
 
         setupList('modalImmunities', creature.immunities, 'noImmunities');
         setupList('modalVoices', creature.voices, 'noVoices');
         translateModalContent();
-        modal.style.display = 'block';
+        
+        if (modal) {
+            modal.style.display = 'block';
+        }
     }
 
     // Funciones auxiliares
@@ -196,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } else {
             const li = document.createElement('li');
-            li.textContent = translations[currentLanguage][noItemsTranslationKey] || 'Ninguno';
+            li.textContent = translations[currentLanguage]?.[noItemsTranslationKey] || 'Ninguno';
             li.style.padding = 'var(--space-sm) 0';
             li.style.color = 'var(--text-secondary)';
             li.style.fontStyle = 'italic';
@@ -208,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const fields = ['Speed', 'Summonable', 'Convinceable'];
         fields.forEach(field => {
             const element = document.querySelector(`[data-i18n="modal${field}"]`);
-            if (element && translations[currentLanguage] && translations[currentLanguage][`modal${field}`]) {
+            if (element && translations[currentLanguage]?.[`modal${field}`]) {
                 element.textContent = translations[currentLanguage][`modal${field}`];
             }
         });
@@ -216,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const sections = ['details', 'immunities', 'voices', 'droppedItems'];
         sections.forEach(section => {
             const element = document.querySelector(`[data-i18n="${section}"]`);
-            if (element && translations[currentLanguage] && translations[currentLanguage][section]) {
+            if (element && translations[currentLanguage]?.[section]) {
                 element.textContent = translations[currentLanguage][section];
             }
         });
@@ -224,15 +319,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Funcionalidad de búsqueda y filtrado de criaturas
     function filterCreatures() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const selectedRace = raceFilter.value;
-        const sortBy = sortFilter.value;
+        const searchTerm = searchInput?.value?.toLowerCase() || '';
+        const selectedRace = raceFilter?.value || '';
+        const sortBy = sortFilter?.value || 'name';
+
+        console.log('Filtering creatures:', { searchTerm, selectedRace, sortBy });
 
         let filtered = [...creaturesData];
 
         if (searchTerm) {
             filtered = filtered.filter(creature =>
-                creature.name.toLowerCase().includes(searchTerm)
+                creature.name && creature.name.toLowerCase().includes(searchTerm)
             );
         }
 
@@ -243,13 +340,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (sortBy === 'name') {
-            filtered.sort((a, b) => a.name.localeCompare(b.name));
+            filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         } else if (sortBy === 'health') {
-            filtered.sort((a, b) => parseInt(b.health) - parseInt(a.health));
+            filtered.sort((a, b) => parseInt(b.health || 0) - parseInt(a.health || 0));
         } else if (sortBy === 'experience') {
-            filtered.sort((a, b) => parseInt(b.experience) - parseInt(a.experience));
+            filtered.sort((a, b) => parseInt(b.experience || 0) - parseInt(a.experience || 0));
         }
 
+        console.log('Filtered results:', filtered.length);
         displayCreatures(filtered);
     }
 
@@ -260,7 +358,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (searchInput) {
         searchInput.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') filterCreatures();
+            if (e.key === 'Enter') {
+                filterCreatures();
+            }
         });
         searchInput.addEventListener('input', filterCreatures);
     }
@@ -271,7 +371,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (searchItemInput) {
         searchItemInput.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') searchItems();
+            if (e.key === 'Enter') {
+                searchItems();
+            }
         });
     }
     
@@ -287,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeBtn = document.querySelector('.close');
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
+            if (modal) modal.style.display = 'none';
         });
     }
 

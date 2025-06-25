@@ -2,19 +2,27 @@
 
 // Esperar a que cargue el DOM y los datos existentes
 window.addEventListener('DOMContentLoaded', () => {
+    console.log('Autocomplete initializing...');
+    
     const input = document.getElementById('searchItemInput');
     const suggestionsBox = document.getElementById('itemSuggestions');
     
-    if (!input || !suggestionsBox) {
-        console.warn('Autocomplete elements not found');
+    if (!input) {
+        console.error('searchItemInput not found');
+        return;
+    }
+    
+    if (!suggestionsBox) {
+        console.error('itemSuggestions not found');
         return;
     }
 
     let itemsData = [];
 
     // Obtener los datos desde el archivo JSON
-    fetch('items_to_creatures.json')
+    fetch('./items_to_creatures.json')
         .then(res => {
+            console.log('Autocomplete - Items response status:', res.status);
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status}`);
             }
@@ -22,10 +30,10 @@ window.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             itemsData = data;
-            console.log('Items data loaded:', itemsData.length, 'items');
+            console.log('Autocomplete - Items data loaded:', itemsData.length, 'items');
         })
         .catch(err => {
-            console.error('Error cargando ítems:', err);
+            console.error('Autocomplete - Error cargando ítems:', err);
             itemsData = []; // Fallback to empty array
         });
 
@@ -39,12 +47,15 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         if (!itemsData || itemsData.length === 0) {
+            console.log('No items data available for autocomplete');
             return;
         }
 
         const matches = itemsData
             .filter(item => item.name && item.name.toLowerCase().includes(query))
             .slice(0, 10);
+
+        console.log('Autocomplete matches:', matches.length);
 
         if (matches.length === 0) {
             suggestionsBox.style.display = 'none';
@@ -62,6 +73,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 // Trigger search
                 const searchButton = document.getElementById('searchItemButton');
                 if (searchButton) {
+                    console.log('Triggering item search from autocomplete');
                     searchButton.click();
                 }
             });
@@ -86,4 +98,6 @@ window.addEventListener('DOMContentLoaded', () => {
             suggestionsBox.style.display = 'none';
         }
     });
+    
+    console.log('Autocomplete initialized successfully');
 });
